@@ -32,11 +32,11 @@ Add a shortcut in `shell:startup` (targeting `pythonw.exe path\to\focus_ring.py`
 - Desktop notification + chime at each transition
 - Breaks-today and streak persist locally
 
-It's a browser tab, so it's easy to ignore — the Windows overlay is the one built to actually be followed.
+It's a browser tab, so it's easy to ignore, the Windows overlay is the one built to actually be followed.
 
 ## Why this design
 
-Eye-strain tools tend to look like generic productivity timers. Both versions are built around the actual physical object the rule references — a lens barrel's distance scale — so the ring isn't just counting down, it's sweeping toward 20 feet.
+Eye-strain tools tend to look like generic productivity timers. Both versions are built around the actual physical object the rule references, a lens barrel's distance scale, so the ring isn't just counting down, it's sweeping toward 20 feet.
 
 ## License
 
