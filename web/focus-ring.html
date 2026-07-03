@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>20 · 20 · 20</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #EEF2ED;
+    --paper: #F8FAF7;
+    --ink: #1F2A22;
+    --ink-soft: #55645A;
+    --sage: #5C7A63;
+    --sage-dim: #9AAE9F;
+    --amber: #C98A4B;
+    --amber-soft: #EAD4B8;
+    --line: #C7D2C5;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{height:100%;}
+  body{
+    background: var(--bg);
+    background-image:
+      radial-gradient(circle at 15% 10%, rgba(92,122,99,0.06), transparent 40%),
+      radial-gradient(circle at 85% 90%, rgba(201,138,75,0.06), transparent 40%);
+    color: var(--ink);
+    font-family: 'Inter', sans-serif;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    min-height:100vh;
+    padding: 32px 16px;
+  }
+
+  .card{
+    width:100%;
+    max-width: 480px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    padding: 36px 32px 28px;
+    box-shadow: 0 1px 2px rgba(31,42,34,0.04), 0 12px 32px rgba(31,42,34,0.06);
+  }
+
+  .eyebrow{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom: 22px;
+  }
+  .eyebrow .label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  .eyebrow .rule{
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: var(--sage);
+  }
+
+  /* ---- lens ring ---- */
+  .lens-wrap{
+    position:relative;
+    width: 300px;
+    height: 300px;
+    margin: 4px auto 20px;
+  }
+  svg.lens{
+    width:100%;
+    height:100%;
+    transform: rotate(-90deg);
+  }
+  .track{
+    fill:none;
+    stroke: #DEE6DC;
+    stroke-width: 2;
+  }
+  .progress{
+    fill:none;
+    stroke: var(--sage);
+    stroke-width: 3;
+    stroke-linecap: round;
+    transition: stroke 0.4s ease;
+  }
+  .progress.break{
+    stroke: var(--amber);
+  }
+  .tick{
+    stroke: var(--ink-soft);
+    stroke-width: 1.4;
+    opacity: 0.55;
+  }
+  .tick.hit{
+    stroke: var(--amber);
+    opacity: 1;
+    stroke-width: 2.2;
+  }
+  .tick-label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 10px;
+    fill: var(--ink-soft);
+    text-anchor: middle;
+  }
+  .tick-label.hit{
+    fill: var(--amber);
+    font-weight: 600;
+  }
+
+  .lens-center{
+    position:absolute;
+    inset:0;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    gap: 6px;
+  }
+  .time{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 52px;
+    letter-spacing: -0.02em;
+    line-height:1;
+    filter: blur(0px);
+    transition: filter 0.6s ease;
+  }
+  .time.settling{
+    animation: settle 0.6s ease forwards;
+  }
+  @keyframes settle{
+    0%{ filter: blur(6px); opacity:0.5; }
+    100%{ filter: blur(0px); opacity:1; }
+  }
+  .phase{
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--sage);
+  }
+  .phase.break{ color: var(--amber); }
+
+  .distance-mark{
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-soft);
+    letter-spacing: 0.04em;
+  }
+
+  .instruction{
+    text-align:center;
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height:1.5;
+    margin-bottom: 24px;
+    min-height: 20px;
+  }
+  .instruction b{ color: var(--ink); font-weight:600; }
+
+  .controls{
+    display:flex;
+    gap:10px;
+    margin-bottom: 22px;
+  }
+  button{
+    font-family:'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    border-radius: 10px;
+    padding: 12px 0;
+    border: 1px solid var(--line);
+    background: var(--bg);
+    color: var(--ink);
+    cursor:pointer;
+    flex:1;
+    transition: background 0.15s ease, transform 0.1s ease, border-color 0.15s ease;
+  }
+  button:hover{ background: #E3E9E2; }
+  button:active{ transform: scale(0.98); }
+  button.primary{
+    background: var(--sage);
+    border-color: var(--sage);
+    color: var(--paper);
+  }
+  button.primary:hover{ background: #517159; }
+  button.ghost{
+    flex: 0 0 auto;
+    width: 44px;
+    padding: 12px 0;
+  }
+
+  .stats{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    border-top: 1px solid var(--line);
+    padding-top: 16px;
+  }
+  .stat{
+    text-align:center;
+    flex:1;
+  }
+  .stat .n{
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 20px;
+    font-weight:500;
+    color: var(--ink);
+  }
+  .stat .l{
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-top:2px;
+  }
+  .stat + .stat{ border-left: 1px solid var(--line); }
+
+  .foot-note{
+    text-align:center;
+    font-size: 11px;
+    color: var(--ink-soft);
+    margin-top: 18px;
+    line-height:1.5;
+  }
+  .foot-note a{ color: var(--sage); text-decoration:underline; cursor:pointer; }
+
+  @media (max-width: 400px){
+    .lens-wrap{ width: 240px; height:240px; }
+    .time{ font-size: 42px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="eyebrow">
+    <span class="label">Focus Ring</span>
+    <span class="rule">20·20·20</span>
+  </div>
+
+  <div class="lens-wrap">
+    <svg class="lens" viewBox="0 0 300 300">
+      <circle class="track" cx="150" cy="150" r="132"></circle>
+      <circle id="progressRing" class="progress" cx="150" cy="150" r="132" stroke-dasharray="829.4" stroke-dashoffset="829.4"></circle>
+      <!-- ticks generated by JS -->
+      <g id="ticks"></g>
+    </svg>
+    <div class="lens-center">
+      <div class="time" id="timeDisplay">20:00</div>
+      <div class="phase" id="phaseLabel">Focused Work</div>
+      <div class="distance-mark" id="distanceMark">ring sweeps to 20 FT</div>
+    </div>
+  </div>
+
+  <div class="instruction" id="instruction">
+    Every 20 minutes, the ring sweeps round. When it reaches <b>20&nbsp;FT</b>, look at something at least twenty feet away for twenty seconds.
+  </div>
+
+  <div class="controls">
+    <button class="primary" id="startBtn">Start</button>
+    <button class="ghost" id="resetBtn" title="Reset">↺</button>
+  </div>
+
+  <div class="stats">
+    <div class="stat">
+      <div class="n" id="breaksToday">0</div>
+      <div class="l">Breaks Today</div>
+    </div>
+    <div class="stat">
+      <div class="n" id="streak">0</div>
+      <div class="l">Day Streak</div>
+    </div>
+    <div class="stat">
+      <div class="n" id="notifState">Off</div>
+      <div class="l">Alerts</div>
+    </div>
+  </div>
+
+  <div class="foot-note">
+    Keep this tab open (pin it) — the tab title tracks the countdown even when you're not looking at it. <a id="enableNotif">Enable desktop alerts</a>
+  </div>
+</div>
+
+<script>
+(function(){
+  const WORK_SECONDS = 20 * 60;
+  const BREAK_SECONDS = 20;
+  const RADIUS = 132;
+  const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
+
+  const ticksData = [
+    {ft:1, angle:0},
+    {ft:3, angle:40},
+    {ft:6, angle:80},
+    {ft:10, angle:150},
+    {ft:15, angle:250},
+    {ft:20, angle:330},
+  ];
+
+  const ticksG = document.getElementById('ticks');
+  ticksData.forEach(t=>{
+    const rad = (t.angle) * Math.PI/180;
+    const outerR = RADIUS + 14;
+    const innerR = RADIUS + 4;
+    const cx = 150, cy = 150;
+    // account for the -90deg rotation on the svg, so compute in the svg's own coordinate space (pre-rotation angle 0 = right)
+    const x1 = cx + innerR * Math.cos(rad);
+    const y1 = cy + innerR * Math.sin(rad);
+    const x2 = cx + outerR * Math.cos(rad);
+    const y2 = cy + outerR * Math.sin(rad);
+    const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+    line.setAttribute('x1', x1); line.setAttribute('y1', y1);
+    line.setAttribute('x2', x2); line.setAttribute('y2', y2);
+    line.classList.add('tick');
+    line.dataset.ft = t.ft;
+    if(t.ft === 20) line.id = 'tick20';
+    ticksG.appendChild(line);
+
+    const labelR = outerR + 12;
+    const lx = cx + labelR * Math.cos(rad);
+    const ly = cy + labelR * Math.sin(rad);
+    const text = document.createElementNS('http://www.w3.org/2000/svg','text');
+    text.setAttribute('x', lx); text.setAttribute('y', ly);
+    text.setAttribute('transform', `rotate(90 ${lx} ${ly})`);
+    text.classList.add('tick-label');
+    text.dataset.ft = t.ft;
+    if(t.ft === 20) text.id = 'tickLabel20';
+    text.textContent = t.ft + 'ft';
+    ticksG.appendChild(text);
+  });
+
+  const progressRing = document.getElementById('progressRing');
+  progressRing.style.strokeDasharray = CIRCUMFERENCE;
+  progressRing.style.strokeDashoffset = CIRCUMFERENCE;
+
+  const timeDisplay = document.getElementById('timeDisplay');
+  const phaseLabel = document.getElementById('phaseLabel');
+  const instruction = document.getElementById('instruction');
+  const distanceMark = document.getElementById('distanceMark');
+  const startBtn = document.getElementById('startBtn');
+  const resetBtn = document.getElementById('resetBtn');
+  const breaksTodayEl = document.getElementById('breaksToday');
+  const streakEl = document.getElementById('streak');
+  const notifStateEl = document.getElementById('notifState');
+  const enableNotif = document.getElementById('enableNotif');
+
+  let phase = 'work'; // 'work' | 'break'
+  let remaining = WORK_SECONDS;
+  let running = false;
+  let timerId = null;
+  let audioCtx = null;
+
+  function fmt(s){
+    const m = Math.floor(s/60).toString().padStart(2,'0');
+    const ss = Math.floor(s%60).toString().padStart(2,'0');
+    return `${m}:${ss}`;
+  }
+
+  function chime(){
+    try{
+      audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+      const now = audioCtx.currentTime;
+      [660, 880].forEach((freq, i)=>{
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0, now + i*0.18);
+        gain.gain.linearRampToValueAtTime(0.12, now + i*0.18 + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + i*0.18 + 0.5);
+        osc.connect(gain).connect(audioCtx.destination);
+        osc.start(now + i*0.18);
+        osc.stop(now + i*0.18 + 0.5);
+      });
+    }catch(e){}
+  }
+
+  function notify(title, body){
+    if('Notification' in window && Notification.permission === 'granted'){
+      try{ new Notification(title, {body}); }catch(e){}
+    }
+  }
+
+  function render(){
+    timeDisplay.textContent = fmt(remaining);
+    document.title = `${fmt(remaining)} · ${phase === 'work' ? 'focus' : 'look away'}`;
+
+    const total = phase === 'work' ? WORK_SECONDS : BREAK_SECONDS;
+    const elapsed = total - remaining;
+    const frac = elapsed / total;
+
+    if(phase === 'work'){
+      progressRing.classList.remove('break');
+      progressRing.style.strokeDashoffset = CIRCUMFERENCE * (1 - frac);
+      phaseLabel.textContent = 'Focused Work';
+      phaseLabel.classList.remove('break');
+      distanceMark.textContent = `ring sweeps toward 20 FT · ${Math.round(frac*100)}%`;
+      instruction.innerHTML = `Every 20 minutes, the ring sweeps round. When it reaches <b>20&nbsp;FT</b>, look at something at least twenty feet away for twenty seconds.`;
+      document.getElementById('tick20').classList.remove('hit');
+      document.getElementById('tickLabel20').classList.remove('hit');
+    } else {
+      progressRing.classList.add('break');
+      progressRing.style.strokeDashoffset = CIRCUMFERENCE * (1 - frac);
+      phaseLabel.textContent = 'Look 20 Feet Away';
+      phaseLabel.classList.add('break');
+      distanceMark.textContent = `holding at 20 FT`;
+      instruction.innerHTML = `<b>Look up.</b> Find anything roughly twenty feet off — a window, the far wall, the end of the room — and rest your eyes on it.`;
+      document.getElementById('tick20').classList.add('hit');
+      document.getElementById('tickLabel20').classList.add('hit');
+    }
+  }
+
+  function tick(){
+    remaining -= 1;
+    if(remaining < 0){
+      if(phase === 'work'){
+        phase = 'break';
+        remaining = BREAK_SECONDS;
+        chime();
+        notify('Look 20 feet away', 'Rest your eyes for 20 seconds.');
+        timeDisplay.classList.remove('settling'); void timeDisplay.offsetWidth; timeDisplay.classList.add('settling');
+      } else {
+        phase = 'work';
+        remaining = WORK_SECONDS;
+        chime();
+        notify('Back to focus', 'Next break in 20 minutes.');
+        timeDisplay.classList.remove('settling'); void timeDisplay.offsetWidth; timeDisplay.classList.add('settling');
+        incrementBreakCount();
+      }
+    }
+    render();
+  }
+
+  function start(){
+    if(running) return;
+    running = true;
+    startBtn.textContent = 'Pause';
+    startBtn.classList.add('primary');
+    timerId = setInterval(tick, 1000);
+  }
+  function pause(){
+    running = false;
+    startBtn.textContent = 'Start';
+    clearInterval(timerId);
+  }
+  function reset(){
+    pause();
+    phase = 'work';
+    remaining = WORK_SECONDS;
+    render();
+  }
+
+  startBtn.addEventListener('click', ()=> running ? pause() : start());
+  resetBtn.addEventListener('click', reset);
+
+  enableNotif.addEventListener('click', async ()=>{
+    if(!('Notification' in window)){
+      notifStateEl.textContent = 'N/A';
+      return;
+    }
+    const perm = await Notification.requestPermission();
+    notifStateEl.textContent = perm === 'granted' ? 'On' : 'Off';
+  });
+
+  if('Notification' in window){
+    notifStateEl.textContent = Notification.permission === 'granted' ? 'On' : 'Off';
+  } else {
+    notifStateEl.textContent = 'N/A';
+  }
+
+  // ---- persisted stats (personal, not shared) ----
+  const todayKey = () => 'breaks:' + new Date().toISOString().slice(0,10);
+
+  async function incrementBreakCount(){
+    try{
+      let count = 0;
+      try{
+        const res = await window.storage.get(todayKey());
+        count = res ? parseInt(res.value, 10) : 0;
+      }catch(e){ count = 0; }
+      count += 1;
+      await window.storage.set(todayKey(), String(count));
+      breaksTodayEl.textContent = count;
+      await updateStreak();
+    }catch(e){ /* storage unavailable, degrade silently */ }
+  }
+
+  async function updateStreak(){
+    try{
+      let streak = 0;
+      let cursor = new Date();
+      while(true){
+        const key = 'breaks:' + cursor.toISOString().slice(0,10);
+        let has = false;
+        try{
+          const res = await window.storage.get(key);
+          has = res && parseInt(res.value, 10) > 0;
+        }catch(e){ has = false; }
+        if(!has) break;
+        streak += 1;
+        cursor.setDate(cursor.getDate() - 1);
+        if(streak > 365) break;
+      }
+      streakEl.textContent = streak;
+    }catch(e){}
+  }
+
+  async function loadStats(){
+    try{
+      const res = await window.storage.get(todayKey());
+      breaksTodayEl.textContent = res ? res.value : '0';
+    }catch(e){
+      breaksTodayEl.textContent = '0';
+    }
+    await updateStreak();
+  }
+
+  loadStats();
+  render();
+})();
+</script>
+</body>
+</html>
