@@ -1,0 +1,56 @@
+<svg width="1080" height="1080" viewBox="0 0 1080 1080" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <clipPath id="screenClip">
+      <rect x="60" y="60" width="960" height="750" rx="10"/>
+    </clipPath>
+  </defs>
+
+  <rect width="1080" height="1080" fill="#0C100D"/>
+
+  <!-- laptop screen frame -->
+  <rect x="52" y="52" width="976" height="766" rx="14" fill="#2A322C"/>
+  <rect x="60" y="60" width="960" height="750" rx="10" fill="#DCE3DA"/>
+
+  <g clip-path="url(#screenClip)">
+    <!-- desktop behind the overlay: a faint code editor to sell "this sits over everything" -->
+    <rect x="60" y="60" width="960" height="750" fill="#EDF1ED"/>
+    <rect x="60" y="60" width="960" height="34" fill="#D3DCD1"/>
+    <circle cx="86" cy="77" r="6" fill="#C98A4B"/>
+    <circle cx="106" cy="77" r="6" fill="#9AAE9F"/>
+    <circle cx="126" cy="77" r="6" fill="#5C7A63"/>
+    <text x="540" y="82" text-anchor="middle" font-family="Consolas, monospace" font-size="13" fill="#55645A">focus_ring.py — editor</text>
+
+    <g font-family="Consolas, monospace" font-size="14" fill="#8A968D">
+      <text x="90" y="140">class Overlay:</text>
+      <text x="90" y="168">    def __init__(self, root):</text>
+      <text x="90" y="196">        self.win.attributes('-topmost', True)</text>
+      <text x="90" y="224">        self.win.attributes('-fullscreen', True)</text>
+      <text x="90" y="252">        chime('break')</text>
+    </g>
+
+    <!-- the fullscreen overlay itself, exactly matching the app's colors -->
+    <rect x="60" y="60" width="960" height="750" fill="#111814" opacity="0.94"/>
+
+    <g transform="translate(540,410)">
+      <circle r="128" fill="none" stroke="#2A342D" stroke-width="4"/>
+      <circle r="128" fill="none" stroke="#C98A4B" stroke-width="8" stroke-linecap="round"
+              stroke-dasharray="480 804" transform="rotate(-90)"/>
+      <text x="0" y="20" text-anchor="middle" font-family="Segoe UI, sans-serif" font-weight="600" font-size="76" fill="#EEF2ED">14</text>
+    </g>
+
+    <text x="540" y="600" text-anchor="middle" font-family="Segoe UI, sans-serif" font-weight="700" font-size="26" fill="#C98A4B" letter-spacing="1">LOOK 20 FEET AWAY</text>
+    <text x="540" y="634" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="16" fill="#B9C3BB">Find the far wall, a window, anything distant — rest your eyes on it.</text>
+    <text x="540" y="770" text-anchor="middle" font-family="Consolas, monospace" font-size="12" fill="#5A655E">click anywhere or press Esc to skip</text>
+  </g>
+
+  <!-- laptop base -->
+  <path d="M 20 838 L 1060 838 L 1010 880 L 70 880 Z" fill="#3A443C"/>
+  <rect x="480" y="838" width="120" height="6" fill="#1F2A22"/>
+
+  <!-- copy below the device -->
+  <text x="540" y="970" text-anchor="middle" font-family="Inter, sans-serif" font-size="30" font-weight="600" fill="#EEF2ED">it overlays your entire screen</text>
+  <text x="540" y="1008" text-anchor="middle" font-family="Inter, sans-serif" font-size="18" fill="#9AAE9F">every 20 minutes, whatever you're doing — you can't miss it</text>
+
+  <text x="90" y="1055" font-family="IBM Plex Mono, monospace" font-size="15" fill="#7A8A7D">focus ring · windows tray app</text>
+  <text x="990" y="1055" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="15" fill="#7A8A7D">open source · MIT</text>
+</svg>
